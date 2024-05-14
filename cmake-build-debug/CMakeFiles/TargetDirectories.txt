@@ -1,0 +1,3 @@
+/home/issa/CLionProjects/DiagramDynamo/cmake-build-debug/CMakeFiles/DiagramDynamo.dir
+/home/issa/CLionProjects/DiagramDynamo/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/issa/CLionProjects/DiagramDynamo/cmake-build-debug/CMakeFiles/rebuild_cache.dir
