@@ -1,5 +1,7 @@
 #include "TransferFunctionBlock.h"
 #include <cassert>
+#include <iostream>
+#include <sstream>
 
 // Helper function to perform polynomial convolution
 Eigen::VectorXd convolve(const Eigen::VectorXd& a, const Eigen::VectorXd& b) {
@@ -30,14 +32,14 @@ double TransferFunctionBlock::SendInput(double input) {
 
     double output = 0.0;
 
-    // Calculate the numerator part
+    // Calculate the numerator part (considering all past inputs)
     for (int i = 0; i < numerator_.size(); ++i) {
         if (i < pastInputs_.size()) {
             output += numerator_[i] * pastInputs_[i];
         }
     }
 
-    // Calculate the denominator part (skip the first element which is the current output)
+    // Calculate the denominator part (considering past outputs, starting from index 1)
     for (int i = 1; i < denominator_.size(); ++i) {
         if (i - 1 < pastOutputs_.size()) {
             output -= denominator_[i] * pastOutputs_[i - 1];
@@ -51,6 +53,7 @@ double TransferFunctionBlock::SendInput(double input) {
 
     return output;
 }
+
 
 double TransferFunctionBlock::GetOutput() const {
     // Return the most recent output
@@ -88,4 +91,53 @@ TransferFunctionBlock TransferFunctionBlock::FeedbackConnection(const TransferFu
     Eigen::VectorXd new_num = block.numerator_;
     Eigen::VectorXd new_den = block.denominator_ + feedback_gain * convolve(block.numerator_, Eigen::VectorXd::Ones(1));
     return TransferFunctionBlock(new_num, new_den);
+}
+// Helper function to format a polynomial from coefficients
+std::string formatPolynomial(const Eigen::VectorXd& coefficients) {
+    std::ostringstream oss;
+    bool first = true;
+
+    for (int i = 0; i < coefficients.size(); ++i) {
+        double coeff = coefficients[i];
+        int power = coefficients.size() - 1 - i;
+
+        if (coeff != 0) {
+            if (!first && coeff > 0) {
+                oss << " + ";
+            } else if (coeff < 0) {
+                oss << " - ";
+                coeff = -coeff;  // Make coefficient positive for printing
+            }
+
+            if (coeff != 1 || power == 0) {
+                oss << coeff;
+            }
+
+            if (power > 0) {
+                oss << "s";
+                if (power > 1) {
+                    oss << "^" << power;
+                }
+            }
+
+            first = false;
+        }
+    }
+
+    if (first) {
+        // If all coefficients are zero, the polynomial is 0
+        oss << "0";
+    }
+
+    return oss.str();
+}
+
+void TransferFunctionBlock::PrintTransferFunction() const {
+    std::string num_str = formatPolynomial(numerator_);
+    std::string den_str = formatPolynomial(denominator_);
+
+    std::cout << "Transfer Function: " << std::endl;
+    std::cout << "      " << num_str << std::endl;
+    std::cout << "H(s) = -----------------" << std::endl;
+    std::cout << "      " << den_str << std::endl;
 }

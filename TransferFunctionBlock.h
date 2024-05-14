@@ -65,6 +65,10 @@ public:
      * @return A new TransferFunctionBlock object representing the system with feedback applied.
      */
     static TransferFunctionBlock FeedbackConnection(const TransferFunctionBlock& block, double feedback_gain);
+    /**
+        * Prints the transfer function in polynomial form.
+        */
+    void PrintTransferFunction() const;
 
 private:
     // Internal state variables
