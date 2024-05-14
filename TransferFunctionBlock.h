@@ -9,7 +9,6 @@
 #include <deque>
 #include <Eigen/Dense>
 
-
 class TransferFunctionBlock {
 public:
     // Enum for signal types (currently unused, can be added for future expansion)
@@ -75,7 +74,7 @@ private:
     std::deque<double> pastOutputs_;
 
     // Function to evaluate the polynomial (using Eigen)
-    double EvaluatePolynomial(const Eigen::VectorXd& p, double x) const;
+    double EvaluatePolynomial(const Eigen::VectorXd& coefficients, double x) const;
 };
 
 #endif //DIAGRAMDYNAMO_TRANSFERFUNCTIONBLOCK_H
