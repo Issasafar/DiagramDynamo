@@ -124,6 +124,13 @@ TransferFunctionBlock::TransferFunctionBlock(const Eigen::VectorXd &numerator, c
         : numerator_(numerator), denominator_(denominator) {
 }
 
+std::string repeat_string(std::string word, unsigned long count){
+    std::stringstream temp;
+    while (count--) {
+        temp << word;
+    }
+    return temp.str();
+}
 /**
  * @brief Prints the transfer function in a readable format.
  */
@@ -132,9 +139,9 @@ void TransferFunctionBlock::PrintTransferFunction() const {
     std::string den_str = formatPolynomial(denominator_);
 
     std::cout << "Transfer Function: " << std::endl;
-    std::cout << "      " << num_str << std::endl;
-    std::cout << "H(s) = -----------------" << std::endl;
-    std::cout << "      " << den_str << std::endl;
+    std::cout << "       " << num_str << std::endl;
+    std::cout << "H(s) = " << repeat_string("-", std::max(num_str.size(), den_str.size())) << std::endl;
+    std::cout << "       " << den_str << std::endl;
 }
 
 /**
