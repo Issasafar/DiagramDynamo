@@ -124,6 +124,12 @@ TransferFunctionBlock::TransferFunctionBlock(const Eigen::VectorXd &numerator, c
         : numerator_(numerator), denominator_(denominator) {
 }
 
+/**
+ * @brief repeat the word n times where n = count
+ * @param word
+ * @param count
+ * @return result
+ */
 std::string repeat_string(std::string word, unsigned long count){
     std::stringstream temp;
     while (count--) {
